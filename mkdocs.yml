@@ -1,6 +1,9 @@
 site_name: TVM System Engineering Journey
 site_description: Deep Learning Compiler Build Blueprint and Learning Notes
 site_author: key-tech
+site_url: https://keytech42.github.io/tvm-deep-dive/
+repo_url: https://github.com/keytech42/tvm-deep-dive
+repo_name: tvm-deep-dive
 
 theme:
   name: material
