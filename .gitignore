@@ -1,0 +1,18 @@
+# Local builds and source (managed via docs/journal for exact versions)
+tvm/
+
+# Python Virtual Environment
+.venv/
+__pycache__/
+
+# MkDocs generated site
+site/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
