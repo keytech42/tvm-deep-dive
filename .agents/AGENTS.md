@@ -18,9 +18,10 @@ When you (the AI) start a new session in this workspace, ALWAYS follow these rul
 - **[ ] Step 4: C++ Core (TensorIR)**: Zoom in on `src/tir/transforms`. Goal: Dissect a single core optimization technique (like Tiling or Operator Fusion).
 
 ### 2. Environment Setup
-Before running any TVM Python scripts or tests, you MUST activate the environment and set paths:
+Before running any TVM Python scripts or tests, you MUST activate the environment, install dependencies, and set paths:
 ```bash
 source .venv/bin/activate
+pip install -r requirements.txt
 export TVM_HOME="$(pwd)/tvm"
 export PYTHONPATH=$TVM_HOME/python:$PYTHONPATH
 ```

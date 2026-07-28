@@ -10,6 +10,7 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 
 ### Step 0: The Foundation (Completed)
 - Clone TVM and build it from source (handling C++ CMake and Python FFI module complexities).
+- *Environment requirements are frozen in `requirements.txt`. Make sure to run `pip install -r requirements.txt`.*
 - *See [Journal 01](journal/01_environment_and_clone.md) and [Journal 02](journal/02_build_and_compile.md).*
 
 ### Step 1: The Big Picture via TVMC (Next)

@@ -1,0 +1,22 @@
+# ---------------------------------------------------------
+# TVM Python Core Dependencies
+# ---------------------------------------------------------
+numpy
+scipy
+decorator
+attrs
+typing-extensions
+
+# ---------------------------------------------------------
+# AI Frameworks for TVMC (Model Ingestion)
+# ---------------------------------------------------------
+torch
+torchvision
+onnx
+onnxoptimizer
+
+# ---------------------------------------------------------
+# Documentation (Portfolio Generation)
+# ---------------------------------------------------------
+mkdocs
+mkdocs-material
