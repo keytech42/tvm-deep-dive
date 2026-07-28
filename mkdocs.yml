@@ -43,5 +43,6 @@ nav:
   - Journal:
     - "01. Environment & Clone": journal/01_environment_and_clone.md
     - "02. Build & Compile": journal/02_build_and_compile.md
+    - "03. Relax Compilation Pipeline": journal/03_relax_compilation_pipeline.md
   - Notes:
     - "System Architecture": notes/architecture.md

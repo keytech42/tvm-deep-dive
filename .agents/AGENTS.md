@@ -12,7 +12,7 @@ When you (the AI) start a new session in this workspace, ALWAYS follow these rul
 
 ### 1. Understand the Roadmap (The 3-Step Strategy + FFI)
 - **[x] Step 0: The Foundation**: Clone TVM and build it from source (Completed: C++ Core & Python FFI bindings are built and working).
-- **[ ] Step 1: The Big Picture (TVMC)**: Use the `tvmc` CLI tool to compile a simple PyTorch/ONNX model to `.so` or `.tar`. Goal: See the whole pipeline.
+- **[x] Step 1: The Big Picture (Relax)**: Compiling an ONNX model to `.so` via TVM Relax API.
 - **[ ] Step 2: Python Frontend Tracing**: Dive into `python/tvm/relax` or `relay`. Goal: Trace how familiar Python operations (e.g., `Conv2d`) are ingested into TVM's internal graph nodes.
 - **[ ] Step 3: FFI Boundary Tracking (PackedFunc)**: Goal: Master the `PackedFunc` mechanism to understand how TVM transitions from Python to C++ with zero serialization overhead.
 - **[ ] Step 4: C++ Core (TensorIR)**: Zoom in on `src/tir/transforms`. Goal: Dissect a single core optimization technique (like Tiling or Operator Fusion).
