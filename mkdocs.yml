@@ -42,5 +42,6 @@ nav:
   - Home: index.md
   - Journal:
     - "01. Environment & Clone": journal/01_environment_and_clone.md
+    - "02. Build & Compile": journal/02_build_and_compile.md
   - Notes:
     - "System Architecture": notes/architecture.md
