@@ -52,15 +52,15 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Journal:
-    - "01. Environment & Clone": journal/01_environment_and_clone.md
+    - "01. Environment Setup & Clone": journal/01_environment_setup.md
     - "02. Build & Compile": journal/02_build_and_compile.md
     - "03. Relax Compilation Pipeline": journal/03_relax_compilation_pipeline.md
-    - "04. Python Frontend Code Tracing": journal/02_frontend_code_tracing.md
-    - "05. FFI Boundary Tracking": journal/03_ffi_boundary_tracking.md
-    - "06. Operator Fusion Execution": journal/04_fusion_pass_execution.md
+    - "04. Python Frontend Code Tracing": journal/04_frontend_code_tracing.md
+    - "05. FFI Boundary Tracking": journal/05_ffi_boundary_tracking.md
+    - "06. Operator Fusion Execution": journal/06_operator_fusion_execution.md
   - Notes:
-    - "System Architecture": notes/architecture.md
+    - "00. System Architecture": notes/00_system_architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
-    - "03. Serialization vs Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
+    - "03. Serialization vs. Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
     - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md

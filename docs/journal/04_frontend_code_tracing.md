@@ -1,4 +1,4 @@
-# Execution Log: TVM Python Frontend Tracing
+# TVM Python Frontend Code Tracing
 
 This journal documents the exact code paths traced during our exploration of the TVM Python frontend, specifically analyzing how an ONNX model is ingested and translated into a TVM AST.
 

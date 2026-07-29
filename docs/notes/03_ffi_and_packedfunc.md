@@ -1,4 +1,4 @@
-# 03. Serialization vs. Zero-Copy: The FFI Boundary
+# Serialization vs. Zero-Copy: The FFI Boundary
 
 This note explains the rationale behind TVM's `PackedFunc` architecture and the concept of "Zero-copy" execution across language boundaries.
 
@@ -30,4 +30,4 @@ If typical communication relies on serialization, the ultimate optimization is t
 This is the essence of TVM's FFI boundary. By treating the Python frontend strictly as a lightweight control plane that juggles C++ memory pointers, TVM achieves native C++ compilation speeds while retaining the user-friendly interface of Python.
 
 ---
-**Related Execution Log**: [[03_ffi_boundary_tracking]]
+**Related Execution Log**: [[05_ffi_boundary_tracking]]

@@ -11,7 +11,7 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 ### Step 0: The Foundation (Completed)
 - Clone TVM and build it from source (handling C++ CMake and Python FFI module complexities).
 - *Environment requirements are frozen in `requirements.txt`. Make sure to run `pip install -r requirements.txt`.*
-- *See [Journal 01](journal/01_environment_and_clone.md) and [Journal 02](journal/02_build_and_compile.md).*
+- *See [Journal 01](journal/01_environment_setup.md) and [Journal 02](journal/02_build_and_compile.md).*
 
 ### Step 1: The Big Picture via Relax (Completed)
 - Used the modern `tvm.relax` Python API to compile a simple PyTorch/ONNX model into a native `.so` library.
@@ -20,13 +20,13 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 ### Step 2: Python Frontend Tracing (Completed)
 - Dive into `python/tvm/relax` or `relay`.
 - **Objective:** Trace how familiar Python operations (e.g., `Conv2d`) are ingested into TVM's internal graph nodes.
-- *See [Journal 04: Python Frontend Code Tracing](journal/02_frontend_code_tracing.md).*
+- *See [Journal 04: Python Frontend Code Tracing](journal/04_frontend_code_tracing.md).*
 - *See [Note 02: Frontend Parsing and AST](notes/02_frontend_parsing_and_ast.md).*
 
 ### Step 3: Crossing the Boundary (FFI & PackedFunc) (Completed)
 - Explore how TVM transitions from Python to C++ with zero serialization overhead.
 - **Objective:** Master the `PackedFunc` mechanism to understand how heavy lifting is instantly delegated to C++.
-- *See [Journal 05: FFI Boundary Tracking](journal/03_ffi_boundary_tracking.md).*
+- *See [Journal 05: FFI Boundary Tracking](journal/05_ffi_boundary_tracking.md).*
 - *See [Note 03: Serialization vs Zero-Copy (FFI)](notes/03_ffi_and_packedfunc.md).*
 
 ### Step 4A: C++ Core & TensorIR - Operator Fusion

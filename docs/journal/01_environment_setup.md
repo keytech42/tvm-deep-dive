@@ -1,4 +1,4 @@
-# 01. Environment Setup & TVM Source Clone
+# Environment Setup & TVM Source Clone
 
 This entry logs the exact environment state and steps taken to clone and configure the Apache TVM project from source.
 

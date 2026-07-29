@@ -1,11 +1,11 @@
-# 04. Operator Fusion: Execution and Tracing
+# Operator Fusion: Execution and Tracing
 
 !!! info "Deep Dive"
     This journal documents the execution of TVM's `FuseOps` and `FuseTIR` passes. For a deep dive into the C++ Pattern Matching algorithm that powers this fusion, see [[04_operator_fusion_architecture]].
 
 ## The Objective
 
-In [Journal 02](02_frontend_code_tracing.md), we discovered that the frontend intentionally atomizes PyTorch's `Conv2d` into a separate `Conv` and `Add`. Our objective here is to prove that the C++ backend can detect this atomized pattern and re-fuse it into a single, hardware-optimized block.
+In [Journal 04](04_frontend_code_tracing.md), we discovered that the frontend intentionally atomizes PyTorch's `Conv2d` into a separate `Conv` and `Add`. Our objective here is to prove that the C++ backend can detect this atomized pattern and re-fuse it into a single, hardware-optimized block.
 
 ## The Experiment (`04_operator_fusion_trace.py`)
 

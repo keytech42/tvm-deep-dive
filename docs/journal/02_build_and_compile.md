@@ -1,4 +1,4 @@
-# 02. Build & Compilation Troubleshooting
+# Build & Compilation Troubleshooting
 
 Building complex C++ projects like TVM from source rarely goes perfectly on the first try. In this phase, we encounter a classic dependency issue, debug it, and successfully compile the source.
 

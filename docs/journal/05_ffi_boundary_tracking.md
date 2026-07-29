@@ -1,11 +1,11 @@
-# 03. Crossing the Boundary: FFI and PackedFunc
+# Crossing the Boundary: FFI and PackedFunc
 
 !!! info "Deep Dive"
     This journal entry documents the experimental tracing of the Python-to-C++ boundary in TVM. For a theoretical explanation of *why* this boundary is designed this way (Serialization vs. Zero-copy), see [[03_ffi_and_packedfunc]].
 
 ## The Objective
 
-In [Journal 02](02_frontend_code_tracing.md), we observed how the Python frontend parses an ONNX model and constructs an AST using `relax.op.nn.conv2d`. However, TVM's core compiler engine is written in C++. The objective of this trace is to explicitly observe the **Foreign Function Interface (FFI)** mechanism that bridges Python and C++ without the overhead of serialization.
+In [Journal 04](04_frontend_code_tracing.md), we observed how the Python frontend parses an ONNX model and constructs an AST using `relax.op.nn.conv2d`. However, TVM's core compiler engine is written in C++. The objective of this trace is to explicitly observe the **Foreign Function Interface (FFI)** mechanism that bridges Python and C++ without the overhead of serialization.
 
 ## The Experiment (`03_ffi_boundary_test.py`)
 

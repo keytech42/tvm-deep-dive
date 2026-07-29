@@ -1,4 +1,4 @@
-# 04. C++ Architecture: Operator Fusion and Pattern Matching
+# C++ Architecture: Operator Fusion and Pattern Matching
 
 This note dissects the C++ implementation of the `FuseOps` compiler pass, explaining how TVM algorithmically decides which nodes can be fused together.
 
@@ -45,4 +45,4 @@ During the `FuseOps` pass, TVM uses a Union-Find data structure to traverse the 
 Once grouped, the `FuseTIR` pass translates this logical group into a single block of C++ nested loops (TensorIR). The boundaries between the operations are erased, and intermediate memory allocations (which would normally trigger heavy DRAM writes) are converted to `sblock_alloc_buffer`, meaning they will exist only in the processor's ultra-fast L1 cache or registers.
 
 ---
-**Related Execution Log**: [[04_fusion_pass_execution]]
+**Related Execution Log**: [[06_operator_fusion_execution]]

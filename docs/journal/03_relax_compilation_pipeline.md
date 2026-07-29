@@ -1,4 +1,4 @@
-# Journal 03: The Big Picture (Relax Compilation Pipeline)
+# The Big Picture: Relax Compilation Pipeline
 
 ## Objective
 Analyze the end-to-end pipeline of TVM: The transformation of a high-level Deep Learning model (PyTorch) into a hardware-specific C++ Shared Library (`.so`).
