@@ -84,30 +84,45 @@ In PyTorch, `nn.Conv2d` automatically handles both the matrix multiplication (co
 
 However, a compiler demands pure, atomic mathematical primitives to maximize optimization freedom. Therefore, TVM's `Conv` parser explicitly tears this apart (Desugaring). 
 
-By examining `tvm/python/tvm/relax/frontend/onnx/onnx_frontend.py`, we see the exact moment this happens:
+By examining the Apache TVM source code (`tvm/python/tvm/relax/frontend/onnx/onnx_frontend.py`), we see the exact moment this happens:
 
-```python
-# Inside class Conv(OnnxOpConverter):
+??? abstract "Ground Truth: Source Code Tracing (`class Conv`)"
+    [View on GitHub (Commit `a104a7b0`)](https://github.com/apache/tvm/blob/a104a7b0a299103d1e910debcbe63aeafcea045f/python/tvm/relax/frontend/onnx/onnx_frontend.py#L1917-L1971)
 
-# 1. Emit the pure convolution node (No Bias)
-conv_out = bb.normalize(
-    op(
-        data=data,
-        weight=inputs[1], # (1)!
-        strides=attr.get("strides", 1),
-        # ... layout and padding omitted for brevity
-    )
-)
+    ```python linenums="1917"
+            if ndim == 3:
+                op = relax.op.nn.conv1d
+                data_layout = "NCW"
+                kernel_layout = "OIW"
+            elif ndim == 4:
+                op = relax.op.nn.conv2d # (1)!
+                data_layout = "NCHW"
+                kernel_layout = "OIHW"
+            # ... (padding logic omitted for brevity) ...
 
-# 2. Check for Bias and emit an explicit Add node
-if inputs[2] is not None: # (2)!
-    bias = relax.op.reshape(inputs[2], [1, -1] + [1] * (ndim - 2))
-    conv_out = relax.op.add(conv_out, bias) # (3)!
-```
+            conv_out = bb.normalize(
+                op(
+                    data=data,
+                    weight=inputs[1], # (2)!
+                    strides=attr.get("strides", 1),
+                    padding=attr.get("pads", 0),
+                    dilation=attr.get("dilations", 1),
+                    groups=attr.get("group", 1),
+                    data_layout=data_layout,
+                    kernel_layout=kernel_layout,
+                )
+            )
+            if inputs[2] is not None: # (3)!
+                bias = relax.op.reshape(inputs[2], [1, -1] + [1] * (ndim - 2))
+                conv_out = relax.op.add(conv_out, bias) # (4)!
 
-1. `inputs[1]` represents the weight tensor extracted from the ONNX graph.
-2. `inputs[2]` is the optional bias tensor. The parser explicitly checks if it exists.
-3. If bias exists, the `BlockBuilder` emits a `relax.op.add()` node and chains it to the output of the convolution.
+            return conv_out
+    ```
+
+    1. The parser dynamically selects the appropriate operator (`relax.op.nn.conv2d`) based on input dimensions.
+    2. `inputs[1]` represents the weight tensor extracted from the ONNX graph.
+    3. `inputs[2]` is the optional bias tensor. The parser explicitly checks if it exists.
+    4. If bias exists, the `BlockBuilder` emits a `relax.op.add()` node and chains it to the output of the convolution.
 
 ## The Illusion of TVMScript
 
