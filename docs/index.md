@@ -17,9 +17,11 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 - Used the modern `tvm.relax` Python API to compile a simple PyTorch/ONNX model into a native `.so` library.
 - *See [Journal 03](journal/03_relax_compilation_pipeline.md).*
 
-### Step 2: Python Frontend Tracing
+### Step 2: Python Frontend Tracing (Completed)
 - Dive into `python/tvm/relax` or `relay`.
 - **Objective:** Trace how familiar Python operations (e.g., `Conv2d`) are ingested into TVM's internal graph nodes.
+- *See [Journal 04: Python Frontend Code Tracing](journal/02_frontend_code_tracing.md).*
+- *See [Note 02: Frontend Parsing and AST](notes/02_frontend_parsing_and_ast.md).*
 
 ### Step 3: Crossing the Boundary (FFI & PackedFunc)
 - Explore how TVM transitions from Python to C++ with zero serialization overhead.
