@@ -1,61 +1,60 @@
 # Journal 03: The Big Picture (Relax Compilation Pipeline)
 
-## 🎯 Objective
+## Objective
+Analyze the end-to-end pipeline of TVM: The transformation of a high-level Deep Learning model (PyTorch) into a hardware-specific C++ Shared Library (`.so`).
 
-Understand the end-to-end pipeline of TVM: How does a Python Deep Learning model (like PyTorch) get converted into a hardware-specific C++ Shared Library (`.so`)?
+## Architectural Shift: Relay to Relax
+Initial roadmaps included the `tvmc` CLI tool, which utilized TVM's legacy **Relay** frontend. Inspection of the `0.26.dev0` build confirms the complete deprecation and removal of Relay and `tvmc`.
 
-## 🚨 The Plot Twist: Goodbye Relay, Hello Relax
+The current repository exclusively utilizes **TVM Unity (Relax)**. This architecture is designed specifically to resolve the limitations of static compilation, providing native support for dynamic shapes and modern Large Language Model (LLM) workloads. We interact directly with the `tvm.relax` API.
 
-Initially, our roadmap planned to use the legacy `tvmc` CLI tool (which relied on TVM's older **Relay** frontend). However, upon inspecting our `0.26.dev0` bleeding-edge build, we made a massive discovery: **TVMC and Relay have been completely removed from this fork!**
+## Pipeline Execution
 
-This repository is purely dedicated to **TVM Unity (Relax)**, the next-generation architecture built specifically for dynamic shapes and Large Language Models (LLMs). This is actually a huge advantage, as we get to bypass legacy code and interact directly with the modern `tvm.relax` API.
-
-## 🛠️ The Pipeline Execution
-
-We executed the pipeline in two steps:
+The compilation process is executed in two sequential stages:
 
 ### 1. Generating a Dummy Model (`scripts/01_generate_model.py`)
-We created a minimal PyTorch model containing a `Conv2d`, `ReLU`, `Flatten`, and `Linear` layer. We exported this to `dummy_model.onnx`. We used a small dummy model to ensure instant compilation while preserving the exact same architectural pipeline used for massive models like LLaMA.
+A minimal PyTorch model containing `Conv2d`, `ReLU`, `Flatten`, and `Linear` operations was constructed and exported to `dummy_model.onnx`. A minimal model ensures rapid compilation while preserving the exact architectural pipeline utilized by large-scale models.
 
 ### 2. Compiling with Relax (`scripts/02_compile_model.py`)
-Instead of a black-box CLI tool, we used a simple Python script to compile the model:
+Compilation is performed via the Python API:
 1. Load the ONNX model.
-2. Ingest it into TVM's internal representation using `relax.frontend.onnx.from_onnx`.
-3. Compile it to an Executable using `relax.build`.
-4. Export the C++ library to `compiled_model.so`.
+2. Ingest the graph into TVM's internal representation via `relax.frontend.onnx.from_onnx`.
+3. Compile the Intermediate Representation (IR) into an Executable using `relax.build`.
+4. Export the compiled C++ binary to `compiled_model.so`.
 
-## 🔬 Inspecting the TVMScript (The Internal IR)
+## Inspecting the TVMScript (Internal IR)
 
-The most valuable artifact from this process is `dummy_model_tvmscript.txt`. Before compiling to C++, TVM translates the ONNX graph into its own Python-like AST called **TVMScript**.
+The intermediate artifact `dummy_model_tvmscript.txt` reveals the parsed Abstract Syntax Tree (AST). TVM translates the ONNX graph into **TVMScript**, a round-trippable, Python-like IR.
 
 ```python
 @I.ir_module
 class Module:
     @R.function
-    def main(input: R.Tensor(("batch_size", 3, 224, 224), dtype="float32")) -> R.Tensor(("batch_size", 10), dtype="float32"):
-        batch_size = T.int64()
-        with R.dataflow():
-            # Convolution Layer (notice the layout and strides)
-            lv: R.Tensor(...) = R.nn.conv2d(input, metadata["relax.expr.Constant"][0], strides=[1, 1], padding=[1, 1, 1, 1], ...)
-            
-            # Bias Add and ReLU
-            lv2: R.Tensor(...) = R.add(lv, lv1)
-            lv3: R.Tensor(...) = R.nn.relu(lv2)
-            
-            # Matmul (Linear Layer)
-            lv6: R.Tensor(...) = R.matmul(lv4, lv5, out_dtype=None)
-            gv: R.Tensor(...) = R.add(lv6, metadata["relax.expr.Constant"][3])
+    def main(input: R.Tensor(("batch_size", 3, 224, 224), dtype="float32")) -> R.Tensor(("batch_size", 10), dtype="float32"): # (1)!
+        batch_size = T.int64() # (2)!
+        R.func_attr({"num_input": 1})
+        with R.dataflow(): # (3)!
+            lv: R.Tensor((batch_size, 16, 224, 224), dtype="float32") = R.nn.conv2d(input, metadata["relax.expr.Constant"][0], strides=[1, 1], padding=[1, 1, 1, 1], dilation=[1, 1], groups=1, data_layout="NCHW", kernel_layout="OIHW", out_layout="NCHW", out_dtype=None)
+            lv1: R.Tensor((1, 16, 1, 1), dtype="float32") = R.reshape(metadata["relax.expr.Constant"][1], R.shape([1, 16, 1, 1]))
+            lv2: R.Tensor((batch_size, 16, 224, 224), dtype="float32") = R.add(lv, lv1) # (4)!
+            lv3: R.Tensor((batch_size, 16, 224, 224), dtype="float32") = R.nn.relu(lv2)
+            lv4: R.Tensor((batch_size, 802816), dtype="float32") = R.reshape(lv3, R.shape([batch_size, 802816]))
+            lv5: R.Tensor((802816, 10), dtype="float32") = R.permute_dims(metadata["relax.expr.Constant"][2], axes=[1, 0])
+            lv6: R.Tensor((batch_size, 10), dtype="float32") = R.matmul(lv4, lv5, out_dtype=None)
+            gv: R.Tensor((batch_size, 10), dtype="float32") = R.add(lv6, metadata["relax.expr.Constant"][3])
             R.output(gv)
         return gv
 ```
 
-### Key Takeaways from the TVMScript:
-1. **Dynamic Shapes are First-Class**: Notice `"batch_size"`. Unlike older frameworks that freeze dimensions, Relax natively tracks symbolic dimensions (`T.int64()`) throughout the entire graph.
-2. **Dataflow Block**: The `with R.dataflow():` context means these operations have no side effects. The compiler can aggressively reorder, fuse, or parallelize anything inside this block safely.
-3. **Hardware Agnostic to Hardware Specific**: This high-level IR (Relax) will eventually be lowered into TensorIR (TIR) loops and then to LLVM C++ code inside the `compiled_model.so`.
+1.  **Dynamic Shape Mapping:** PyTorch defined a static input dimension `1`, but TVM maps this dimension to a string identifier `"batch_size"`.
+2.  **Symbolic Variable Binding:** `T.int64()` constructs a symbolic variable. This confirms TVM does not hardcode the dimension, allowing for dynamic batch sizes at runtime.
+3.  **Dataflow Block:** Operations within `R.dataflow()` are guaranteed to lack side effects. This context allows the compiler to safely perform aggressive optimizations (e.g., operator fusion, instruction reordering).
+4.  **Operator Decomposition:** PyTorch's `Conv2d` implicitly handles bias addition. TVM IR decomposes this into discrete mathematical operations: a convolution (`lv`) followed by an explicit matrix addition (`lv2`).
 
-## ✅ Conclusion
+!!! info "Deep Dive: TVM Design Philosophy"
+    Why are dynamic shapes critical for modern LLMs? Why did legacy compilers like TensorRT enforce static compilation? What is the exact binary composition of the `.so` artifact? For a rigorous technical analysis of these concepts, refer to the [Compiler Design Philosophy](../notes/01_compiler_design_philosophy.md) note.
 
-We successfully witnessed the "Big Picture". A PyTorch model went in, was translated into TVM's internal **Relax IR**, and was ultimately compiled out as a `compiled_model.so` native library. 
+## Conclusion
+The end-to-end pipeline is verified. A PyTorch model is ingested, translated into the **Relax IR** (TVMScript), and lowered into a native `compiled_model.so` binary targeting the LLVM backend. 
 
-**Next Step:** Now that we've seen the very top (Python API) and the very bottom (`.so`), it's time to explore the bridge that connects them: the **FFI Boundary Tracking (PackedFunc)**.
+**Next Objective:** Trace the FFI (Foreign Function Interface) boundary via `PackedFunc` to observe the zero-serialization transition from Python to C++.
