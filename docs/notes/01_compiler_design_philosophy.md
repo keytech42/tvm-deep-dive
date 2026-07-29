@@ -48,6 +48,16 @@ Fundamentally, an `.so` file is an Executable and Linkable Format (ELF) binary c
 However, TVM's `.so` artifacts are not exclusively comprised of executable logic. The binary is structured into segments, which embed:
 1.  **Instructions (`.text` segment):** The actual hardware-executable operations.
 2.  **Metadata (`.rodata` segment):** Serialized JSON strings delineating the graph structure or function signatures.
-3.  **Weights (Optional):** If exported via specific packing routines, the model's trained parameter arrays are physically bundled into data segments within the binary.
+3.  **Weights (The Dummy vs. Production Dichotomy):** The storage of model parameters varies drastically depending on the compilation strategy:
+    - *Minimal/Dummy Execution (Embedded):* For small models compiled without specific serialization flags, TVM treats weights as constants. These constants are physically compiled directly into the read-only data section (`.rodata`) of the `.so` binary.
+    - *Production Architecture (Separated):* For modern Large Language Models (LLMs) scaling to tens of gigabytes, embedding weights within an ELF binary is fundamentally impossible due to OS binary loading constraints. In production, the executable logic (`.so`) and the weight dictionaries (typically `.params` files) are strictly separated. The C++ runtime engine dynamically loads the `.params` file into memory during inference.
 
 The logic execution is strictly handled by the machine code instructions, rendering the binary opaque without the use of a disassembler.
+
+## The Execution Gap and the FFI Boundary
+
+Once the `.so` binary is generated, a critical architectural challenge emerges: execution. 
+
+Python and C++ operate within fundamentally different memory management paradigms. Attempting to pass a standard Python NumPy array into a compiled C++ binary natively would require massive serialization overhead, negating any performance gains achieved by the compiler.
+
+To execute the `.so` seamlessly from Python without this overhead (Zero-copy), TVM relies on a highly optimized Foreign Function Interface (FFI). The core technology facilitating this boundary crossing is the `PackedFunc`—a unified C++ abstraction that allows Python to invoke C++ functions natively. Dissecting this mechanism is the focus of the upcoming FFI Boundary Tracking phase.
