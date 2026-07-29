@@ -22,13 +22,13 @@ TVM was cloned recursively to fetch all third-party submodules (like `cutlass`, 
 git clone --recursive https://github.com/apache/tvm.git tvm
 ```
 
-> [!NOTE]
-> **Version Pinning**
-> To ensure reproducibility of this study and the code referenced in these notes, the exact commit cloned was:
-> `a104a7b0a299103d1e910debcbe63aeafcea045f`
-> 
-> You can view the exact state of the repository at this commit here:
-> [apache/tvm @ a104a7b](https://github.com/apache/tvm/tree/a104a7b0a299103d1e910debcbe63aeafcea045f)
+!!! note
+    **Version Pinning**<br>
+    To ensure reproducibility of this study and the code referenced in these notes, the exact commit cloned was:
+    `a104a7b0a299103d1e910debcbe63aeafcea045f`
+    
+    You can view the exact state of the repository at this commit here:
+    [apache/tvm @ a104a7b](https://github.com/apache/tvm/tree/a104a7b0a299103d1e910debcbe63aeafcea045f)
 
 *(As discussed, the `tvm` folder is added to `.gitignore` to keep this documentation repository lightweight. Re-cloning and checking out this specific commit will perfectly restore the build environment.)*
 

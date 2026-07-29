@@ -19,9 +19,9 @@ CMake Error at cmake/utils/FindLLVM.cmake:87 (message):
 During the initial environment diagnostic, we ran `brew --prefix llvm` which returned `/opt/homebrew/opt/llvm` with an exit code of `0`. We assumed LLVM was installed. \
 However, `brew info llvm` revealed the truth: **LLVM was not actually installed!**
 
-> [!WARNING]
-> **Homebrew Gotcha**
-> The `brew --prefix <formula>` command will return the *expected* path for a formula regardless of whether it is currently installed on the system. Always verify installation with `brew info` or by checking if the binary actually exists.
+!!! warning
+    **Homebrew Gotcha**<br>
+    The `brew --prefix <formula>` command will return the *expected* path for a formula regardless of whether it is currently installed on the system. Always verify installation with `brew info` or by checking if the binary actually exists.
 
 ### Resolution
 We resolved this by installing LLVM properly via Homebrew:
@@ -45,7 +45,7 @@ At 94% completion, the compilation abruptly failed with a cryptic `make` error. 
 checking whether build environment is sane... configure: error: unsafe srcdir value: '~/Developer/LEARN/26.07.27 -- TVM/tvm/3rdparty/tvm-ffi/cmake/Utils/../../3rdparty/libbacktrace'
 ```
 
-**What happened?** 
+**What happened?**<br>
 The TVM repository was cloned inside a workspace folder named `26.07.27 -- TVM`. The `libbacktrace` submodule uses `autoconf` (the `configure` script), which **strictly prohibits spaces** in absolute file paths. Because our workspace directory name contains spaces, `configure` crashed, halting the entire TVM build.
 
 ### Resolution

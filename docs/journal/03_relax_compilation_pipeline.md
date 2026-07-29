@@ -17,6 +17,7 @@ A minimal PyTorch model containing `Conv2d`, `ReLU`, `Flatten`, and `Linear` ope
 
 ### 2. Compiling with Relax (`scripts/02_compile_model.py`)
 Compilation is performed via the Python API:
+
 1. Load the ONNX model.
 2. Ingest the graph into TVM's internal representation via `relax.frontend.onnx.from_onnx`.
 3. Compile the Intermediate Representation (IR) into an Executable using `relax.build`.

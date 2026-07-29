@@ -10,6 +10,7 @@ Tracing requires passing a **dummy input** (a tensor containing arbitrary values
 ## The `.onnx.data` File Mechanism
 
 During ONNX export, a deep learning model is bifurcated into two conceptual components:
+
 1.  **Topology:** The structural layout defining how mathematical nodes are interconnected.
 2.  **Parameters (Weights):** The trained numerical data tensors residing within the nodes.
 
@@ -46,6 +47,7 @@ The output of the TVM pipeline is a Shared Object (`.so`) file.
 Fundamentally, an `.so` file is an Executable and Linkable Format (ELF) binary containing low-level **machine code instructions** (Assembly lowered to binary form, specific to the target architecture such as ARM64, x86_64, or PTX/CUBIN). 
 
 However, TVM's `.so` artifacts are not exclusively comprised of executable logic. The binary is structured into segments, which embed:
+
 1.  **Instructions (`.text` segment):** The actual hardware-executable operations.
 2.  **Metadata (`.rodata` segment):** Serialized JSON strings delineating the graph structure or function signatures.
 3.  **Weights (The Dummy vs. Production Dichotomy):** The storage of model parameters varies drastically depending on the compilation strategy:

@@ -12,6 +12,7 @@ In [Journal 04](04_frontend_code_tracing.md), we discovered that the frontend in
 We wrote a minimal Relax script constructing a graph with `conv2d -> add -> relu`, mimicking a standard Convolutional block.
 
 We applied three transformation passes:
+
 1. `LegalizeOps()`: Lowers high-level Relax operators into raw TIR `call_tir` bindings.
 2. `FuseOps()`: Analyzes the graph and groups compatible bindings into a single `Primitive` function.
 3. `FuseTIR()`: Takes the grouped functions and merges their underlying loops into a single monolithic block of TensorIR.
