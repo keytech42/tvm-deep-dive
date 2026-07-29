@@ -23,9 +23,11 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 - *See [Journal 04: Python Frontend Code Tracing](journal/02_frontend_code_tracing.md).*
 - *See [Note 02: Frontend Parsing and AST](notes/02_frontend_parsing_and_ast.md).*
 
-### Step 3: Crossing the Boundary (FFI & PackedFunc)
+### Step 3: Crossing the Boundary (FFI & PackedFunc) (Completed)
 - Explore how TVM transitions from Python to C++ with zero serialization overhead.
 - **Objective:** Master the `PackedFunc` mechanism to understand how heavy lifting is instantly delegated to C++.
+- *See [Journal 05: FFI Boundary Tracking](journal/03_ffi_boundary_tracking.md).*
+- *See [Note 03: Serialization vs Zero-Copy (FFI)](notes/03_ffi_and_packedfunc.md).*
 
 ### Step 4: C++ Core & TensorIR Optimization
 - Zoom in on `src/tir/transforms`.

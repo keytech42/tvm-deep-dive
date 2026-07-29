@@ -82,7 +82,13 @@ flowchart TD
 ### 2. Desugaring: Breaking Down Convenience APIs
 In PyTorch, `nn.Conv2d` automatically handles both the matrix multiplication (convolution) and the scalar addition (bias). This is "syntactic sugar" for developer convenience.
 
-However, a compiler demands pure, atomic mathematical primitives to maximize optimization freedom. Therefore, TVM's `Conv` parser explicitly tears this apart (Desugaring). 
+At first glance, tearing this apart seems counter-intuitive from a hardware perspective. Modern Neural Processing Units (NPUs) rely on MAC (Multiply-Accumulate) structures, executing FMA (Fused Multiply-Add) instructions that perform multiplication and addition simultaneously. If the hardware prefers fused operations, why does the TVM frontend separate them?
+
+The answer lies in the compiler's two-phase philosophy: **Atomization followed by Fusion**. 
+
+Different frameworks (PyTorch, ONNX, TensorFlow) have slightly different definitions of what a "Convolution" layer implicitly includes. To prevent the compiler from being locked into PyTorch's specific abstractions, the frontend explicitly breaks down all operations into pure, atomic mathematical primitives (Desugaring). This creates a clean, hardware-agnostic AST. 
+
+Later, during the C++ backend optimization phase (e.g., Operator Fusion), the compiler pattern-matches these atomic `Conv` + `Add` nodes and re-fuses them into the optimal FMA instructions specific to the target hardware. The frontend splits them precisely so the backend has the granular freedom to reassemble them perfectly. 
 
 By examining the Apache TVM source code (`tvm/python/tvm/relax/frontend/onnx/onnx_frontend.py`), we see the exact moment this happens:
 
