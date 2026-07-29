@@ -2,7 +2,7 @@
 
 When a deep learning model is ingested into TVM, it does not immediately become executable machine code. The compiler must first translate the model into its own internal language: the **Abstract Syntax Tree (AST)**.
 
-This note dissects the `tvm.relax.frontend.onnx.from_onnx` parsing mechanism, revealing how opaque neural network layers are destructured into explicit TVM AST nodes.
+This note dissects the `tvm.relax.frontend.onnx.from_onnx()` parsing mechanism, revealing how opaque neural network layers are destructured into explicit TVM AST nodes.
 
 ## The Ingestion Pipeline (Data Flow)
 
@@ -11,31 +11,31 @@ To understand the lifecycle of a model as it enters TVM, observe the following d
 ```mermaid
 flowchart TD
     subgraph "1. Framework (Python)"
-        PT["PyTorch Model<br>(nn.Conv2d with Bias)"]
+        PT["<i>// PyTorch Model //</i><br><code>nn.Conv2d</code> with Bias"]
     end
 
     subgraph "2. Serialization"
-        ONNX["ONNX Protobuf<br>(op_type: 'Conv')"]
-        ONNX_Data["Weights<br>(*.onnx.data)"]
+        ONNX["<i>// ONNX Protobuf //</i><br>op_type: <code>Conv</code>"]
+        ONNX_Data["<i>// Weights File //</i><br>'*.onnx.data'"]
     end
 
     subgraph "3. TVM Frontend (Python: onnx_frontend.py)"
-        Importer["ONNXGraphImporter"]
-        BB["relax.BlockBuilder<br>(AST Factory)"]
-        Parser["class Conv<br>(OnnxOpConverter)"]
+        Importer["<i>// Python Module //</i><br><code>ONNXGraphImporter</code>"]
+        BB["<i>// AST Factory //</i><br><code>relax.BlockBuilder</code>"]
+        Parser["<i>// Parser Class //</i><br><code>class Conv(OnnxOpConverter)</code>"]
     end
 
     subgraph "4. TVM Core IR (Memory AST)"
-        AST_Conv["relax.op.nn.conv2d"]
-        AST_Add["relax.op.add"]
+        AST_Conv["<i>// AST Node //</i><br><code>relax.op.nn.conv2d()</code>"]
+        AST_Add["<i>// AST Node //</i><br><code>relax.op.add()</code>"]
     end
     
     subgraph "5. Human Inspection"
-        Printer["TVMScript Printer"]
-        TXT["dummy_model_tvmscript.txt"]
+        Printer["<i>// TVM Printer //</i><br><code>TVMScriptPrinter</code>"]
+        TXT["<i>// Script File //</i><br>'dummy_model_tvmscript.txt'"]
     end
 
-    PT -->|"<code>torch.onnx.export</code>"| ONNX
+    PT -->|"<code>torch.onnx.export()</code>"| ONNX
     PT --> ONNX_Data
     ONNX -->|"<code>from_onnx()</code>"| Importer
     Importer --> Parser
@@ -56,6 +56,28 @@ When we call `tvm_mod = from_onnx(onnx_model)`, the TVM frontend does **not** ex
 
 ### 1. The BlockBuilder (AST Factory)
 The core engine of this translation is the `BlockBuilder` (`bb`). It is a factory class responsible for constructing the AST safely. When the parser encounters an ONNX node, it translates the attributes (like strides and padding) and instructs the `BlockBuilder` to "emit" a new node.
+
+```mermaid
+flowchart TD
+    subgraph "3. TVM Frontend (Python: onnx_frontend.py)"
+        Importer["<i>// Python Module //</i><br><code>ONNXGraphImporter</code>"]
+        BB["<i>// AST Factory //</i><br><code>relax.BlockBuilder</code>"]
+        Parser["<i>// Parser Class //</i><br><code>class Conv(OnnxOpConverter)</code>"]
+    end
+
+    subgraph "4. TVM Core IR (Memory AST)"
+        AST_Conv["<i>// AST Node //</i><br><code>relax.op.nn.conv2d()</code>"]
+        AST_Add["<i>// AST Node //</i><br><code>relax.op.add()</code>"]
+    end
+
+    Importer --> Parser
+    Parser -->|"<code>bb.emit()</code>"| BB
+    BB --> AST_Conv
+    BB --> AST_Add
+
+    classDef memory fill:#1e1e1e,stroke:#4caf50,stroke-width:2px,color:#fff;
+    class AST_Conv,AST_Add memory;
+```
 
 ### 2. Desugaring: Breaking Down Convenience APIs
 In PyTorch, `nn.Conv2d` automatically handles both the matrix multiplication (convolution) and the scalar addition (bias). This is "syntactic sugar" for developer convenience.
@@ -85,17 +107,37 @@ if inputs[2] is not None: # (2)!
 
 1. `inputs[1]` represents the weight tensor extracted from the ONNX graph.
 2. `inputs[2]` is the optional bias tensor. The parser explicitly checks if it exists.
-3. If bias exists, the `BlockBuilder` emits a `relax.op.add` node and chains it to the output of the convolution.
+3. If bias exists, the `BlockBuilder` emits a `relax.op.add()` node and chains it to the output of the convolution.
 
 ## The Illusion of TVMScript
 
 The file `dummy_model_tvmscript.txt` that we generate is **not** the internal representation; it is a decompiled reflection of it.
 
+```mermaid
+flowchart TD
+    subgraph "4. TVM Core IR (Memory AST)"
+        AST_Conv["<i>// AST Node //</i><br><code>relax.op.nn.conv2d()</code>"]
+        AST_Add["<i>// AST Node //</i><br><code>relax.op.add()</code>"]
+    end
+    
+    subgraph "5. Human Inspection"
+        Printer["<i>// TVM Printer //</i><br><code>TVMScriptPrinter</code>"]
+        TXT["<i>// Script File //</i><br>'dummy_model_tvmscript.txt'"]
+    end
+
+    AST_Conv -->|"<code>tvm_mod.script()</code>"| Printer
+    AST_Add -->|"<code>tvm_mod.script()</code>"| Printer
+    Printer --> TXT
+    
+    classDef memory fill:#1e1e1e,stroke:#4caf50,stroke-width:2px,color:#fff;
+    class AST_Conv,AST_Add memory;
+```
+
 After the `BlockBuilder` finishes, the graph exists purely as C++/Python objects in memory (the AST). When we invoke `tvm_mod.script()`, TVM's internal Printer traverses these memory objects and translates them back into a human-readable, Python-like syntax. 
 
 ## Deep Dive: Physical Memory Structure (Teaser)
 
-We now understand that `relax.op.nn.conv2d` and `relax.op.add` are AST objects constructed in memory by the Python frontend. 
+We now understand that `relax.op.nn.conv2d()` and `relax.op.add()` are AST objects constructed in memory by the Python frontend. 
 
 But here lies a critical architectural paradox: **The optimization and code generation engines reside entirely in the C++ core.** 
 
