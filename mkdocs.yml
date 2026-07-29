@@ -57,8 +57,10 @@ nav:
     - "03. Relax Compilation Pipeline": journal/03_relax_compilation_pipeline.md
     - "04. Python Frontend Code Tracing": journal/02_frontend_code_tracing.md
     - "05. FFI Boundary Tracking": journal/03_ffi_boundary_tracking.md
+    - "06. Operator Fusion Execution": journal/04_fusion_pass_execution.md
   - Notes:
     - "System Architecture": notes/architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
     - "03. Serialization vs Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
+    - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md

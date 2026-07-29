@@ -29,9 +29,13 @@ The purpose of this project is not just to use TVM, but to **dismantle and under
 - *See [Journal 05: FFI Boundary Tracking](journal/03_ffi_boundary_tracking.md).*
 - *See [Note 03: Serialization vs Zero-Copy (FFI)](notes/03_ffi_and_packedfunc.md).*
 
-### Step 4: C++ Core & TensorIR Optimization
+### Step 4A: C++ Core & TensorIR - Operator Fusion
+- Zoom in on `src/relax/transform`.
+- **Objective:** Trace graph-level pattern matching (`fuse_ops.cc`) and dig all the way down to TensorIR instruction generation (`fuse_tir.cc`).
+
+### Step 4B: C++ Core & TensorIR - Tiling
 - Zoom in on `src/tir/transforms`.
-- **Objective:** Dissect a single core optimization technique (like **Tiling** or **Operator Fusion**) as if examining it under a microscope.
+- **Objective:** Dissect loop transformations and cache memory access optimization (Tiling).
 
 ---
 *This documentation is served via MkDocs and acts as a living journal of my learning process.*
