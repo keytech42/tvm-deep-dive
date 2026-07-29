@@ -55,6 +55,7 @@ nav:
     - "01. Environment & Clone": journal/01_environment_and_clone.md
     - "02. Build & Compile": journal/02_build_and_compile.md
     - "03. Relax Compilation Pipeline": journal/03_relax_compilation_pipeline.md
+    - "04. Python Frontend Code Tracing": journal/02_frontend_code_tracing.md
   - Notes:
     - "System Architecture": notes/architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
