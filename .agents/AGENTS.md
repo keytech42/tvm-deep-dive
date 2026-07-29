@@ -26,5 +26,19 @@ export TVM_HOME="$(pwd)/tvm"
 export PYTHONPATH=$TVM_HOME/python:$PYTHONPATH
 ```
 
-### 3. Documentation
-Every time you complete a significant step, document the journey in the MkDocs `docs/journal/` folder. The primary audience is human readers (interviewers, recruiters, or learners). Write detailed, professional markdown explanations and ensure `mkdocs.yml` is updated.
+### 3. Documentation & Writing Style (Strict Rules)
+Every time you complete a significant step, document the journey in the MkDocs structure. You MUST adhere to the following stylistic and structural rules:
+- **Language & Tone**: All documentation MUST be written strictly in English. Use a dry, concise, and clean technical/academic tone. Avoid flowery language.
+- **Precision**: Minimize logical ambiguity and equivocation. Be highly precise when explaining technical concepts.
+- **Separation of Concerns & Organic Linking**: 
+  - Use `docs/journal/` strictly for action-oriented execution logs (what was done, how to run it).
+  - Use `docs/notes/` for deep-dive theoretical concepts, architecture discussions, and "Why" explanations.
+  - **CRITICAL:** Journals and notes MUST be organically connected. Use Wiki Links syntax (e.g., `[[01_compiler_design_philosophy]]`) to seamlessly link contexts across documents.
+- **MkDocs Features**: Actively utilize MkDocs Material features to enhance the portfolio:
+  - Use Admonitions (e.g., `!!! info "Deep Dive"`) in the journal to encapsulate links to theoretical notes.
+  - Use Code Annotations (e.g., `# (1)!`) in code blocks to explain specific lines without breaking the reading flow. Ensure `mkdocs.yml` is updated for any new files.
+
+### 4. Proactive Maturity Assessment
+Before proposing or transitioning to the next step in the roadmap, you MUST proactively induce a "Maturity Assessment". 
+- Ask the user to reflect on the current step, summarize their understanding, or raise any unresolved theoretical gaps.
+- Do NOT proceed to the next technical implementation until the user explicitly confirms they have mastered the current step's philosophy and mechanics.

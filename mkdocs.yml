@@ -29,6 +29,10 @@ theme:
     - content.code.copy
     - content.code.annotate
 
+plugins:
+  - search
+  - roamlinks
+
 markdown_extensions:
   - admonition
   - pymdownx.details
