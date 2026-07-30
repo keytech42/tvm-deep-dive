@@ -65,6 +65,7 @@ nav:
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
     - "03. Serialization vs. Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
     - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md
+    - "05. Architecture Clarifications (Step 3 & 4A)": notes/05_architecture_clarifications.md
 
 extra_css:
   - https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css

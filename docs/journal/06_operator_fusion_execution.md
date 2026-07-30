@@ -116,3 +116,9 @@ Here lies the true physical merge. The three independent `call_tir` blocks withi
 +     for i0, i1, i2, i3 in T.grid(...):
 +         # 3. ReLU Loop -> writes to compute (VRAM)
 </div>
+
+## Architecture Deep Dive
+
+!!! abstract "Architecture Clarifications & Key Insights"
+    Before proceeding to TensorIR Tiling (Step 4B), we documented key insights regarding the philosophy of FFI zero-copy, the precise role of compiler passes like `LegalizeOps`, and the memory hierarchy mechanics that make physical fusion effective. See [[05_architecture_clarifications]] for a detailed breakdown of these architectural nuances.
+
