@@ -1,0 +1,196 @@
+/* Prevent the default diff2html behavior (overflow-x: scroll) which always shows the scrollbar. 
+   Override with auto so it only shows when content overflows. */
+.d2h-file-side-diff {
+    overflow-x: auto !important;
+}
+
+/* Force inner elements (like individual lines) to not create their own horizontal scroll */
+.d2h-code-wrapper,
+.d2h-diff-table,
+.d2h-diff-tbody,
+.d2h-code-side-line,
+.d2h-code-line-ctn {
+    overflow-x: visible !important;
+}
+
+/* Completely hide the default webkit scrollbar (replaced with custom DOM scrollbar) */
+.d2h-file-side-diff::-webkit-scrollbar {
+    display: none;
+}
+
+.d2h-file-side-diff {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Custom unified scrollbar track */
+.custom-diff-scrollbar-track {
+    position: absolute;
+    bottom: 4px;
+    left: 10px;
+    right: 10px;
+    /* Slight margin on both sides */
+    height: 10px;
+    z-index: 100;
+    pointer-events: none;
+    /* Prevent clicking on the empty track space (only thumb is clickable) */
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 0.3s ease;
+    /* Fade in / out animation */
+}
+
+.custom-diff-scrollbar-track.is-visible,
+.custom-diff-scrollbar-track.is-dragging {
+    opacity: 1;
+    /* Appears during scroll */
+}
+
+/* Custom scrollbar thumb */
+.custom-diff-scrollbar-thumb {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    /* Light mode semi-transparent */
+    border-radius: 10px;
+    pointer-events: auto;
+    /* Thumb is clickable and draggable */
+    cursor: grab;
+}
+
+.custom-diff-scrollbar-thumb:active {
+    cursor: grabbing;
+}
+
+.custom-diff-scrollbar-thumb:hover,
+.custom-diff-scrollbar-track.is-dragging .custom-diff-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Dark mode (Slate) support for scrollbar */
+[data-md-color-scheme="slate"] .custom-diff-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+[data-md-color-scheme="slate"] .custom-diff-scrollbar-thumb:hover,
+[data-md-color-scheme="slate"] .custom-diff-scrollbar-track.is-dragging .custom-diff-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Pure CSS solution to naturally override diff2html colors when in MkDocs Dark mode (Slate) */
+[data-md-color-scheme="slate"] {
+    --d2h-bg-color: var(--md-code-bg-color);
+    --d2h-border-color: var(--md-default-fg-color--lightest);
+    --d2h-dim-color: var(--md-default-fg-color--light);
+    --d2h-line-border-color: var(--md-default-fg-color--lightest);
+    --d2h-file-header-bg-color: var(--md-default-bg-color);
+    --d2h-file-header-border-color: var(--md-default-fg-color--lightest);
+    --d2h-empty-placeholder-bg-color: #1e1e1e;
+    --d2h-empty-placeholder-border-color: var(--md-default-fg-color--lightest);
+
+    /* Full line background colors (Restored to original colors and opacity) */
+    --d2h-selected-color: rgba(56, 139, 253, 0.1);
+    --d2h-ins-bg-color: rgba(76, 175, 80, 0.2);
+    --d2h-ins-border-color: rgba(76, 175, 80, 0.3);
+    /* Reduced saturation/brightness for red */
+    --d2h-del-bg-color: rgba(200, 50, 50, 0.2);
+    --d2h-del-border-color: rgba(200, 50, 50, 0.3);
+
+    --d2h-info-bg-color: rgba(33, 150, 243, 0.1);
+    --d2h-info-border-color: rgba(33, 150, 243, 0.3);
+}
+
+/* Readability correction for specific inline word changes (INLINE HIGHLIGHTING).
+   Modify these 'background-color' values to adjust the inline highlight colors in dark mode. */
+[data-md-color-scheme="slate"] .d2h-wrapper ins {
+    background-color: rgba(40, 130, 50, 0.5) !important;
+}
+
+[data-md-color-scheme="slate"] .d2h-wrapper del {
+    background-color: rgba(170, 40, 40, 0.5) !important;
+}
+
+/* Common styles for both Light and Dark modes: 
+   Rounded corners for inline highlights and removal of default underline/strikethrough */
+.d2h-wrapper ins,
+.d2h-wrapper del {
+    border-radius: 4px;
+    text-decoration: none !important;
+}
+
+/* Manual correction for text colors (Text parts where diff2html doesn't use CSS variables internally) */
+[data-md-color-scheme="slate"] .d2h-wrapper {
+    color: var(--md-code-fg-color);
+}
+
+[data-md-color-scheme="slate"] .d2h-code-line,
+[data-md-color-scheme="slate"] .d2h-code-side-line,
+[data-md-color-scheme="slate"] .d2h-file-name {
+    color: var(--md-code-fg-color);
+}
+
+[data-md-color-scheme="slate"] .d2h-code-linenumber {
+    color: #858585;
+}
+
+[data-md-color-scheme="slate"] .d2h-tag {
+    background-color: #333;
+    color: #ccc;
+    border-color: #555;
+}
+
+/* -----------------------------------------------------------
+   MkDocs Material Pygments CSS Variables Mapping for diff2html 
+   (Replaces highlight.js external CSS to support dynamic Dark/Light modes)
+   ----------------------------------------------------------- */
+.hljs-keyword,
+.hljs-built_in,
+.hljs-type,
+.hljs-selector-tag,
+.hljs-template-tag,
+.hljs-template-variable {
+    color: var(--md-code-hl-keyword-color, #d73a49);
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp,
+.hljs-addition {
+    color: var(--md-code-hl-string-color, #032f62);
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-section {
+    color: var(--md-code-hl-function-color, #6f42c1);
+}
+
+.hljs-variable,
+.hljs-attr,
+.hljs-attribute,
+.hljs-class .hljs-title {
+    color: var(--md-code-hl-name-color, #22863a);
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+    color: var(--md-code-hl-number-color, #005cc5);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+    color: var(--md-code-hl-comment-color, #6a737d);
+    font-style: italic;
+}
+
+.hljs-punctuation,
+.hljs-operator {
+    color: var(--md-code-hl-punctuation-color, #24292e);
+}

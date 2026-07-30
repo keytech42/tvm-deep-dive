@@ -58,9 +58,18 @@ nav:
     - "04. Python Frontend Code Tracing": journal/04_frontend_code_tracing.md
     - "05. FFI Boundary Tracking": journal/05_ffi_boundary_tracking.md
     - "06. Operator Fusion Execution": journal/06_operator_fusion_execution.md
+    - "__diff_test__": journal/diff_test.md
   - Notes:
     - "00. System Architecture": notes/00_system_architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
     - "03. Serialization vs. Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
     - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md
+
+extra_css:
+  - https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css
+  - stylesheets/diff-theme.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js
+  - javascripts/render-diff.js
