@@ -59,6 +59,7 @@ nav:
     - "04. Python Frontend Code Tracing": journal/04_frontend_code_tracing.md
     - "05. FFI Boundary Tracking": journal/05_ffi_boundary_tracking.md
     - "06. Operator Fusion Execution": journal/06_operator_fusion_execution.md
+    - "07. TensorIR Tiling Execution": journal/07_tensorir_tiling_execution.md
     - "__diff_test__": journal/diff_test.md
   - Notes:
     - "00. System Architecture": notes/00_system_architecture.md
@@ -67,6 +68,7 @@ nav:
     - "03. Serialization vs. Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
     - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md
     - "05. Architecture Clarifications (Step 3 & 4A)": notes/05_architecture_clarifications.md
+    - "06. TensorIR Scheduling & Tiling": notes/06_tensorir_scheduling.md
   - Glossary:
     - "Database (A-Z)": glossary/glossary.md
     - "Clusters":
