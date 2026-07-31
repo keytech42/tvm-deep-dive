@@ -28,13 +28,13 @@ theme:
     - navigation.expand
     - content.code.copy
     - content.code.annotate
-    - content.tooltips
 
 plugins:
   - search
   - roamlinks
 
 markdown_extensions:
+  - abbr
   - admonition
   - pymdownx.details
   - pymdownx.superfences:
@@ -61,18 +61,20 @@ nav:
     - "06. Operator Fusion Execution": journal/06_operator_fusion_execution.md
     - "__diff_test__": journal/diff_test.md
   - Notes:
-    - "00. Glossary": notes/00_glossary.md
     - "00. System Architecture": notes/00_system_architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
     - "03. Serialization vs. Zero-Copy (FFI)": notes/03_ffi_and_packedfunc.md
     - "04. Operator Fusion Architecture": notes/04_operator_fusion_architecture.md
     - "05. Architecture Clarifications (Step 3 & 4A)": notes/05_architecture_clarifications.md
+  - Glossary: glossary/glossary.md
 
 extra_css:
+  - stylesheets/custom.css
   - https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css
   - stylesheets/diff-theme.css
 
 extra_javascript:
+  - javascripts/custom-tooltip.js
   - https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js
   - javascripts/render-diff.js

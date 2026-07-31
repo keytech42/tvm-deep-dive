@@ -38,6 +38,10 @@ Every time you complete a significant step, document the journey in the MkDocs s
 - **MkDocs Features**: Actively utilize MkDocs Material features to enhance the portfolio:
   - Use Admonitions (e.g., `!!! info "Deep Dive"`) in the journal to encapsulate links to theoretical notes.
   - Use Code Annotations (e.g., `# (1)!`) in code blocks to explain specific lines without breaking the reading flow. Ensure `mkdocs.yml` is updated for any new files.
+- **Glossary Architecture (Database vs Views)**: Maintain the Glossary strictly as an unopinionated, alphabetically sorted "Database" at `docs/glossary/glossary.md`. Do NOT mix it with chronological notes. 
+  - **Click (Deep Dive)**: Use Roamlinks (`[[glossary#term]]`) to allow users to navigate to rich visualizations.
+  - **Hover (Quick Summary)**: Rely on `docs/snippets/glossary_abbr.md` to inject `<abbr>` tags. The styling is handled by our Pure CSS implementation (`data-custom-tooltip` and `docs/stylesheets/custom.css`). Do NOT use Material's native `content.tooltips` or third-party JS plugins for link tooltips, as they conflict with accessibility constraints on nested interactive elements.
+- **Diff Rendering (diff2html)**: To display side-by-side code diffs, wrap standard unified diff text in a `<div class="diff-code" style="display: none;">` block. The `render-diff.js` script will automatically intercept and render it beautifully.
 
 ### 4. Proactive Maturity Assessment
 Before proposing or transitioning to the next step in the roadmap, you MUST proactively induce a "Maturity Assessment". 
