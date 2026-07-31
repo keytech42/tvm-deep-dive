@@ -28,6 +28,7 @@ theme:
     - navigation.expand
     - content.code.copy
     - content.code.annotate
+    - content.tooltips
 
 plugins:
   - search
@@ -60,6 +61,7 @@ nav:
     - "06. Operator Fusion Execution": journal/06_operator_fusion_execution.md
     - "__diff_test__": journal/diff_test.md
   - Notes:
+    - "00. Glossary": notes/00_glossary.md
     - "00. System Architecture": notes/00_system_architecture.md
     - "01. Compiler Design Philosophy": notes/01_compiler_design_philosophy.md
     - "02. Frontend Parsing and AST": notes/02_frontend_parsing_and_ast.md
