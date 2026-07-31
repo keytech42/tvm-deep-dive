@@ -15,7 +15,7 @@ When you (the AI) start a new session in this workspace, ALWAYS follow these rul
 - **[x] Step 1: The Big Picture (Relax)**: Compiling an ONNX model to `.so` via TVM Relax API.
 - **[x] Step 2: Python Frontend Tracing (Completed)**: Dive into `python/tvm/relax` or `relay`. Goal: Trace how familiar Python operations (e.g., `Conv2d`) are ingested into TVM's internal graph nodes.
 - **[x] Step 3: FFI Boundary Tracking (Completed)**: Goal: Master the `PackedFunc` mechanism to understand how TVM transitions from Python to C++ with zero serialization overhead.
-- **[ ] Step 4A: C++ Core - Operator Fusion**: Zoom in on `src/relax/transform`. Goal: Trace graph-level pattern matching and TensorIR instruction generation (`fuse_ops.cc`, `fuse_tir.cc`).
+- **[x] Step 4A: C++ Core - Operator Fusion**: Zoom in on `src/relax/transform`. Goal: Trace graph-level pattern matching and TensorIR instruction generation (`fuse_ops.cc`, `fuse_tir.cc`).
 - **[ ] Step 4B: C++ Core - TensorIR Tiling**: Zoom in on `src/tir/transforms`. Goal: Dissect loop transformations and cache optimization techniques.
 
 ### 2. Environment Setup

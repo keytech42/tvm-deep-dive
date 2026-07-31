@@ -86,8 +86,8 @@ The compiler cannot optimize abstract mathematical symbols (`R.nn.conv2d`). It m
 Here lies the true physical merge. The three independent `call_tir` blocks within the `Primitive` function are ripped apart and their `for` loops are bundled into a single C++ function (`@T.prim_func`). Notice that the loops are **not** immediately nested into each other; they remain as three independent sequential loops. However, the critical change is that intermediate buffers now use `T.sblock_alloc_buffer(...)` (mapped to L1 Cache/Registers) rather than allocating new tensors in global memory.
 
 !!! success "Why is this sequential bundling called a 'Fusion'?"
-    Before fusion, the 3 loops existed in completely separate functions (kernels). Moving data between separate GPU kernels forces the data to be flushed to the extremely slow **VRAM (Global Memory)**. 
-    By pulling these 3 independent loops into the *same* physical function context, `FuseTIR` creates an environment where they can pass data through `sblock_alloc_buffer` (L1 Cache / Shared Memory), completely eliminating the VRAM I/O bottleneck. 
+    Before fusion, the 3 loops existed in completely separate functions (kernels). Because multiple kernels run under **temporal isolation** (one must finish completely before the next starts), moving data between them forces the data to be flushed to the extremely slow **VRAM (Global Memory)**. 
+    By pulling these 3 independent loops into the *same* physical function context, `FuseTIR` breaks this temporal barrier. It creates an environment where they can pass data through `sblock_alloc_buffer` (L1 Cache / Shared Memory), completely eliminating the VRAM I/O bottleneck. 
     *(Note: The actual mathematical loop interleaving/nesting to maximize cache hit rates happens in the subsequent **TensorIR Tiling/Scheduling** phase).*
 
 <div class="diff-code" style="display: none;">
