@@ -93,24 +93,39 @@
 
     /* Full line background colors (Restored to original colors and opacity) */
     --d2h-selected-color: rgba(56, 139, 253, 0.1);
-    --d2h-ins-bg-color: rgba(76, 175, 80, 0.2);
-    --d2h-ins-border-color: rgba(76, 175, 80, 0.3);
-    /* Reduced saturation/brightness for red */
-    --d2h-del-bg-color: rgba(200, 50, 50, 0.2);
-    --d2h-del-border-color: rgba(200, 50, 50, 0.3);
+    --d2h-ins-border-color: rgba(46, 160, 67, 0.3);
+    --d2h-del-border-color: rgba(248, 81, 73, 0.3);
 
     --d2h-info-bg-color: rgba(33, 150, 243, 0.1);
     --d2h-info-border-color: rgba(33, 150, 243, 0.3);
 }
 
-/* Readability correction for specific inline word changes (INLINE HIGHLIGHTING).
-   Modify these 'background-color' values to adjust the inline highlight colors in dark mode. */
-[data-md-color-scheme="slate"] .d2h-wrapper ins {
-    background-color: rgba(40, 130, 50, 0.5) !important;
+/* Readability correction for Full Line Backgrounds (Forces line-by-line and side-by-side consistency) */
+[data-md-color-scheme="slate"] .d2h-ins,
+[data-md-color-scheme="slate"] .d2h-code-side-line.d2h-ins,
+[data-md-color-scheme="slate"] .d2h-code-line.d2h-ins,
+[data-md-color-scheme="slate"] tr.d2h-ins {
+    background-color: rgba(46, 160, 67, 0.15) !important;
 }
 
-[data-md-color-scheme="slate"] .d2h-wrapper del {
-    background-color: rgba(170, 40, 40, 0.5) !important;
+[data-md-color-scheme="slate"] .d2h-del,
+[data-md-color-scheme="slate"] .d2h-code-side-line.d2h-del,
+[data-md-color-scheme="slate"] .d2h-code-line.d2h-del,
+[data-md-color-scheme="slate"] tr.d2h-del {
+    background-color: rgba(248, 81, 73, 0.15) !important;
+}
+
+/* Readability correction for specific inline word changes (INLINE HIGHLIGHTING). */
+[data-md-color-scheme="slate"] .d2h-wrapper ins,
+[data-md-color-scheme="slate"] .d2h-wrapper ins * {
+    background-color: rgba(46, 160, 67, 0.4) !important;
+    color: #ffffff !important;
+}
+
+[data-md-color-scheme="slate"] .d2h-wrapper del,
+[data-md-color-scheme="slate"] .d2h-wrapper del * {
+    background-color: rgba(248, 81, 73, 0.4) !important;
+    color: #ffffff !important;
 }
 
 /* Common styles for both Light and Dark modes: 
@@ -193,4 +208,35 @@
 .hljs-punctuation,
 .hljs-operator {
     color: var(--md-code-hl-punctuation-color, #24292e);
+}
+
+/* -----------------------------------------------------------
+   Diff View Toggle Button Styles
+   ----------------------------------------------------------- */
+.diff-toggle-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+
+.diff-toggle-btn {
+    background-color: var(--md-primary-fg-color, #3f51b5);
+    color: var(--md-primary-bg-color, #ffffff);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+    opacity: 0.8;
+}
+
+.diff-toggle-btn:hover {
+    opacity: 1;
+}
+
+[data-md-color-scheme="slate"] .diff-toggle-btn {
+    background-color: var(--md-primary-fg-color);
+    color: var(--md-primary-bg-color);
 }
